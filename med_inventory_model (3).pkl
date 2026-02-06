@@ -1,0 +1,14 @@
+from sklearn.ensemble import RandomForestRegressor
+import joblib
+import pandas as pd
+
+# Load the CSV we just created
+df = pd.read_csv('inventory_data.csv')
+X = df[['Current_Stock', 'Regional_Flu_Rate']]
+y = df['Inventory_Required']
+
+# Train and Save
+model = RandomForestRegressor()
+model.fit(X, y)
+joblib.dump(model, 'med_inventory_model.pkl')
+print("✅ med_inventory_model.pkl created and saved!")
