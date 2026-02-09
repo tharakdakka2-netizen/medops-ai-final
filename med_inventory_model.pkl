@@ -13,3 +13,31 @@ df = pd.DataFrame({
 model = RandomForestRegressor(n_estimators=100).fit(df[['Current_Stock', 'Regional_Flu_Rate']], df['Inventory_Required'])
 joblib.dump(model, 'med_inventory_model.pkl')
 print("✅ Healthy model saved! Upload this new 'med_inventory_model.pkl' to GitHub now.")
+[9:30 PM, 2/9/2026] Tharak: dakkatharakanth@ybl
+[9:39 PM, 2/9/2026] Tharak: import pandas as pd
+import joblib
+from sklearn.ensemble import RandomForestRegressor
+
+# 1. Create fresh sample data for Indian Pharmacy context
+# Current_Stock: Units in hand
+# Regional_Flu_Rate: % of local population with symptoms
+# Inventory_Required: Target units for next week
+data = {
+    'Current_Stock': [100, 50, 200, 30, 80, 10, 150],
+    'Regional_Flu_Rate': [5, 25, 10, 50, 30, 60, 15],
+    'Inventory_Required': [110, 200, 150, 350, 280, 450, 180]
+}
+df = pd.DataFrame(data)
+
+# 2. Train the AI Model
+X = df[['Current_Stock', 'Regional_Flu_Rate']]
+y = df['Inventory_Required']
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X, y)
+
+# 3. Save the model with the CORRECT name
+# This file will be created in your current folder
+joblib.dump(model, 'med_inventory_model.pkl')
+
+print("✅ SUCCESS: med_inventory_model.pkl has been created.")
+print("Now, upload this specific file to your GitHub repository.")
