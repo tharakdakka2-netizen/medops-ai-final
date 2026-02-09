@@ -16,7 +16,7 @@ with st.sidebar:
     else:
         st.info("Scan to unlock AI Restock Advice:")
         # Placeholder UPI QR Code
-        st.image("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=YOUR_UPI_ID@okaxis&pn=MedOpsAI&am=499&cu=INR")
+        st.image("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=dakkatharakanth@ybl=MedOpsAI&am=499&cu=INR")
         st.caption("Pay via GPay, PhonePe, or Paytm")
 
 # 3. Model Loading and Prediction
