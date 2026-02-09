@@ -2,14 +2,14 @@ import pandas as pd
 import joblib
 from sklearn.ensemble import RandomForestRegressor
 
-# Create fresh sample data
+# 1. Fresh training data
 df = pd.DataFrame({
     'Current_Stock': [100, 50, 200, 30, 10], 
     'Regional_Flu_Rate': [5, 25, 10, 50, 60], 
     'Inventory_Required': [110, 200, 150, 350, 450]
 })
 
-# Train and Save
+# 2. Train and Save
 model = RandomForestRegressor(n_estimators=100).fit(df[['Current_Stock', 'Regional_Flu_Rate']], df['Inventory_Required'])
 joblib.dump(model, 'med_inventory_model.pkl')
-print("✅ New model saved! Upload THIS file to GitHub now.")
+print("✅ Healthy model saved! Upload this new 'med_inventory_model.pkl' to GitHub now.")
