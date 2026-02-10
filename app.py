@@ -12,7 +12,7 @@ with st.sidebar:
     st.header("💎 MedOps Pro")
     plan = st.radio("Select Plan:", ["Free", "Pro (₹499/mo)"])
     
-    if plan == "Pro (₹599/mo)":
+    if plan == "Pro (₹499/mo)":
         st.success("✅ Pro Features Active")
     else:
         st.info("Scan to unlock AI Restock Advice:")
