@@ -1,0 +1,20 @@
+import pandas as pd
+import joblib
+from sklearn.ensemble import RandomForestRegressor
+
+# 1. Clean Data (Exactly 2 features to match your app)
+df = pd.DataFrame({
+    'Current_Stock': [100, 50, 200, 30, 80, 10, 150],
+    'Regional_Flu_Rate': [5, 25, 10, 50, 30, 60, 15],
+    'Inventory_Required': [110, 200, 150, 350, 280, 450, 180]
+})
+
+# 2. Train the Model using ONLY those 2 features
+X = df[['Current_Stock', 'Regional_Flu_Rate']]
+y = df['Inventory_Required']
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X, y)
+
+# 3. Save the NEW healthy file
+joblib.dump(model, 'med_inventory_model.pkl')
+print("✅ New 2-column model created! Ready to upload.")
