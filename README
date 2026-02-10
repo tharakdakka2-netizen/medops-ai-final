@@ -1,0 +1,35 @@
+# 🏥 MedOps AI: Smart Inventory for Indian Pharmacies
+
+*MedOps AI* is an AI-powered inventory optimization dashboard designed to help Indian pharmacy owners predict drug demand based on local health trends and current stock levels.
+
+## 🚀 Live Demo
+[Link to your Streamlit App: Replace this with your URL]
+
+## ✨ Key Features
+* *AI Demand Forecasting*: Predicts required inventory units using a Random Forest machine learning model.
+* *Regional Flu Tracking*: Adjusts stock suggestions based on real-time local infection rates.
+* *Pro Monetization*: Integrated UPI payment gateway for unlocking advanced restock logic.
+* *Mobile Friendly*: Fully responsive design for pharmacists on the go.
+
+## 💳 Monetization (UPI Integration)
+The app features a built-in "Pro" tier (₹499/mo) that unlocks exact *Suggested Restock* quantities. 
+* *UPI ID*: dakkatharakanth@ybl
+* *Payment Flow*: Users scan the dynamically generated QR code in the sidebar to pay via GPay, PhonePe, or Paytm.
+
+## 🛠️ Tech Stack
+* *Language*: Python 3.11
+* *Framework*: Streamlit
+* *AI/ML*: Scikit-learn (RandomForestRegressor)
+* *Data Handling*: Pandas & Joblib
+* *Deployment*: Streamlit Cloud
+
+## 📂 Project Structure
+* app.py: The main dashboard and user interface.
+* med_inventory_model.pkl: The trained AI model "brain".
+* requirements.txt: List of dependencies for cloud deployment.
+* README.md: Project documentation.
+
+## 🧑‍💻 Author
+*Dakka Tharakanth*
+* UPI: dakkatharakanth@ybl
+*
