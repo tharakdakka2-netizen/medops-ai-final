@@ -2,17 +2,17 @@ import pandas as pd
 import joblib
 from sklearn.ensemble import RandomForestRegressor
 
-# 1. Clean Data for Indian Pharmacy Context
+# 1. Fresh Data
 df = pd.DataFrame({
     'Current_Stock': [100, 50, 200, 30, 80, 10, 150],
     'Regional_Flu_Rate': [5, 25, 10, 50, 30, 60, 15],
     'Inventory_Required': [110, 200, 150, 350, 280, 450, 180]
 })
 
-# 2. Train AI (Ensure no typos are in the current session)
+# 2. Train the Model
 model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(df[['Current_Stock', 'Regional_Flu_Rate']], df['Inventory_Required'])
 
-# 3. Save the healthy model
+# 3. Save the file
 joblib.dump(model, 'med_inventory_model.pkl')
-print("✅ New healthy model 'med_inventory_model.pkl' created!")
+print("✅ New healthy model 'med_inventory_model.pkl' is ready for upload!")
