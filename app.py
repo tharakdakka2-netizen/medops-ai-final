@@ -1,48 +1,54 @@
 import streamlit as st
-from st_paywall import add_auth  # The "Gatekeeper" library
 import pandas as pd
 import joblib
+import os
 
-st.set_page_config(page_title="MedOps AI | Pro", layout="wide")
-
-# 1. SETUP THE PAYWALL
-# This handles Google Login + Stripe Subscription automatically
-add_auth(
-    required=False, # Set to True to block the WHOLE app until payment
-    subscription_button_text="Unlock Pro for ₹19/mo",
-    button_color="#FF4B4B"
-)
-
+# Page Config
+st.set_page_config(page_title="MedOps AI | Inventory Optimizer", layout="wide")
 st.title("🏥 MedOps AI: Inventory Optimizer")
 
-# 2. CHECK SUBSCRIPTION STATUS
-is_pro = st.session_state.get("user_subscribed", False)
-
+# Sidebar with your UPI ID
 with st.sidebar:
-    if is_pro:
-        st.success("💎 PRO ACCOUNT ACTIVE")
-        st.write(f"Welcome, {st.experimental_user.email}")
-    else:
-        st.warning("Running Free Version")
-        st.info("Upgrade for ₹19/mo to see Restock Advice.")
-
-# 3. AI LOGIC
-stock = st.number_input("Current Stock", value=100)
-flu = st.slider("Flu Rate %", 0, 100, 10)
-
-if st.button("Generate Forecast"):
-    # Load your model (assuming 2 features as discussed)
-    model = joblib.load('med_inventory_model.pkl')
-    prediction = model.predict([[stock, flu]])[0]
+    st.header("💎 MedOps Pro")
+    plan = st.radio("Select Plan:", ["Free", "Pro (₹499/mo)"])
     
-    st.metric("Predicted Demand", f"{int(prediction)} Units")
-    
-    # THE PAYWALL GATE
-    if is_pro:
-        restock = max(0, int(prediction) - stock)
-        st.metric("📦 SUGGESTED RESTOCK", f"{restock} Units")
+    if plan == "Pro (₹19/mo)":
+        st.success("✅ Pro Features Active")
     else:
-        st.error("🔒 Restock Advice is a Pro Feature. Please subscribe below.")
+        st.info("Scan to unlock AI Restock Advice:")
+        my_upi = "dakkatharakanth@ybl" 
+        upi_url = f"upi://pay?pa={my_upi}&pn=MedOpsAI&am=499&cu=INR"
+        qr_api = f"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={upi_url}"
+        st.image(qr_api)
+        st.caption("Pay via GPay, PhonePe, or Paytm")
+
+# AI Logic
+MODEL_FILE = 'med_inventory_model.pkl'
+
+if os.path.exists(MODEL_FILE):
+    try:
+        model = joblib.load(MODEL_FILE)
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("📊 Pharmacy Data")
+            stock = st.number_input("Current Stock (Units)", min_value=0, value=100)
+            flu_rate = st.slider("Regional Flu Rate (%)", 0, 100, 10)
+            
+        if st.button("Generate AI Forecast", type="primary"):
+            # Predict using exactly 2 features to avoid 'Error 10'
+            prediction = model.predict([[stock, flu_rate]])[0]
+            with col2:
+                st.subheader("💡 AI Result")
+                st.metric("Predicted Demand", f"{int(prediction)} Units")
+                if plan == "Pro (₹499/mo)":
+                    order_qty = max(0, int(prediction) - stock)
+                    st.metric("Suggested Restock", f"{order_qty} Units")
+                else:
+                    st.warning("Upgrade to Pro to see Restock Advice.")
+    except Exception as e:
+        st.error(f"Error: {e}. Please re-upload med_inventory_model.pkl")
+else:
+    st.error("Model file not found on GitHub.")
         # The subscription button appears here automatically if not paid
     
 
