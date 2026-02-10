@@ -75,3 +75,37 @@ model.fit(X, y)
 # 4. Save as med_inventory_model.pkl
 joblib.dump(model, 'med_inventory_model.pkl')
 print("✅ SUCCESS: Simplified model created. Upload this to GitHub!")
+import datetime
+
+st.divider()
+st.header("📅 MedOps Expiry Tracker")
+
+# Create a small input form
+with st.expander("➕ Add New Batch"):
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        med_name = st.text_input("Medicine Name")
+    with col2:
+        expiry_date = st.date_input("Expiry Date", min_value=datetime.date.today())
+    with col3:
+        batch_qty = st.number_input("Batch Quantity", min_value=1)
+    
+    if st.button("Save Batch"):
+        st.success(f"Batch for {med_name} saved locally!")
+
+# Sample Expiry Data (In a real app, this would come from a database)
+expiry_data = pd.DataFrame([
+    {"Medicine": "Paracetamol", "Expiry": "2026-03-15", "Days Left": 33},
+    {"Medicine": "Amoxicillin", "Expiry": "2026-02-25", "Days Left": 15},
+    {"Medicine": "Vitamin D3", "Expiry": "2027-01-10", "Days Left": 334},
+])
+
+# Displaying the tracker with alerts
+st.subheader("⚠️ Upcoming Expiries")
+
+def color_expiry(val):
+    color = 'red' if val < 30 else 'black'
+    return f'color: {color}'
+
+# Apply styling to the "Days Left" column
+st.table(expiry_data.style.applymap(color_expiry, subset=['Days Left']))
