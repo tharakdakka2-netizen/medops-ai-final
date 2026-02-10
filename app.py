@@ -105,7 +105,7 @@ expiry_data = pd.DataFrame([
 st.subheader("⚠️ Upcoming Expiries")
 
 def color_expiry(val):
-    color = 'red' if val < 30 else 'black'
+    color = 'red' if val < 30 else 'white'
     return f'color: {color}'
 
 # Apply styling to the "Days Left" column
