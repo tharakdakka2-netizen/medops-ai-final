@@ -152,5 +152,5 @@ def run_expiry_check():
             smtp.login(os.environ.get("EMAIL_USER"), os.environ.get("EMAIL_PASS"))
             smtp.send_message(msg)
 
-if _name__ == "__main__":
+if __name__ == "__main__":
     run_expiry_check()
