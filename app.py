@@ -130,3 +130,27 @@ if st.session_state.get('user_email') == "your_email@gmail.com":
         if st.button("📊 Admin Dashboard"):
             st.write("### Total Logins:", pd.read_csv("user_log.csv").shape[0])
             st.write("### Unique Users:", pd.read_csv("user_log.csv")['Email'].nunique())
+
+import os, pandas as pd, smtplib
+from email.message import EmailMessage
+from datetime import datetime, timedelta
+
+def run_expiry_check():
+    df = pd.read_csv("master_inventory.csv")
+    target_date = datetime.now().date() + timedelta(days=15)
+    expiring = df[pd.to_datetime(df['Expiry']).dt.date == target_date]
+
+    for _, row in expiring.iterrows():
+        msg = EmailMessage()
+        msg['Subject'] = f"⚠️ Expiry Alert: {row['Medicine Name']}"
+        msg['From'] = os.environ.get("EMAIL_USER")
+        msg['To'] = row['Customer Email']
+        # HTML Template from our previous discussion goes here
+        msg.set_content(f"Item {row['Medicine Name']} expires in 15 days.")
+        
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(os.environ.get("EMAIL_USER"), os.environ.get("EMAIL_PASS"))
+            smtp.send_message(msg)
+
+if _name_ == "_main_":
+    run_expiry_check()
