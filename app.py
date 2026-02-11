@@ -175,4 +175,30 @@ if st.session_state.get('user_email') == "your_email@gmail.com":
         if st.button("📊 Admin Dashboard"):
             st.write("### Total Logins:", pd.read_csv("user_log.csv").shape[0])
             st.write("### Unique Users:", pd.read_csv("user_log.csv")['Email'].nunique())
+
+from twilio.rest import Client
+import os
+
+def send_whatsapp_expiry_alert(customer_phone, medicine_name, expiry_date):
+    # These are stored in your GitHub Secrets for safety
+    account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
+    auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
+    client = Client(account_sid, auth_token)
+
+    # Format the message for an Indian Pharmacist
+    message_text = (
+        f"🚨 MedOps AI: Expiry Alert\n\n"
+        f"Namaste Sir, your stock of {medicine_name} is expiring on {expiry_date}.\n\n"
+        f"💡 AI Suggestion: Move this batch to the front shelf and offer a 10% discount to clear stock today.\n\n"
+        f"Click below to manage your inventory:\n"
+        f"https://medopsai.streamlit.app"
+    )
+
+    message = client.messages.create(
+        from_='whatsapp:+14155238886', # Your Twilio sandbox or business number
+        body=message_text,
+        to=f'whatsapp:+91{customer_phone}' # Dynamic Indian phone number
+    )
+    
+    return message.sid
     
