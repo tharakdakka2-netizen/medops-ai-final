@@ -1,0 +1,28 @@
+name: Daily Expiry Alerts
+
+on:
+  schedule:
+    # This runs at 02:30 UTC (8:00 AM IST) every single day
+    - cron: '30 2 * * *'
+  workflow_dispatch: # Allows you to run it manually for testing
+
+jobs:
+  send-alerts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install pandas
+
+      - name: Run Expiry Script
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        run: python expiry_worker.py
