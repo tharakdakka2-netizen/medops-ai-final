@@ -154,4 +154,25 @@ def run_expiry_check():
 
     if __name__ == "__main__":
         run_expiry_check()
+
+import pandas as pd
+from datetime import datetime
+import os
+import streamlit as st
+
+# TRACKING LOGIC
+def log_user_activity(email):
+    log_file = "user_log.csv"
+    new_data = pd.DataFrame([[datetime.now().strftime("%Y-%m-%d %H:%M:%S"), email]], columns=["Timestamp", "Email"])
+    if not os.path.isfile(log_file):
+        new_data.to_csv(log_file, index=False)
+    else:
+        new_data.to_csv(log_file, mode='a', header=False, index=False)
+
+# ADMIN PANEL (Visible only to you)
+if st.session_state.get('user_email') == "your_email@gmail.com":
+    with st.sidebar:
+        if st.button("📊 Admin Dashboard"):
+            st.write("### Total Logins:", pd.read_csv("user_log.csv").shape[0])
+            st.write("### Unique Users:", pd.read_csv("user_log.csv")['Email'].nunique())
     
