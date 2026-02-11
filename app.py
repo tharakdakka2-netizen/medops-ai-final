@@ -202,45 +202,4 @@ def send_whatsapp_expiry_alert(customer_phone, medicine_name, expiry_date):
     
     return message.sid
 
-import pandas as pd
-import smtplib
-from email.message import EmailMessage
-from datetime import datetime, timedelta
-import os
-
-# This script assumes you store your master inventory data in a CSV or Database
-def run_expiry_check():
-    # 1. Load your master database (e.g., from a private URL or GitHub)
-    # For now, we'll assume a CSV named 'master_inventory.csv'
-    if not os.path.exists("master_inventory.csv"):
-        return
-
-    df = pd.read_csv("master_inventory.csv")
-    df['Expiry'] = pd.to_datetime(df['Expiry']).dt.date
-    
-    target_date = datetime.now().date() + timedelta(days=15)
-    expiring_items = df[df['Expiry'] == target_date]
-
-    if expiring_items.empty:
-        print("No items expiring in 15 days.")
-        return
-
-    # 2. Email Setup (Using Secrets)
-    ADMIN_EMAIL = os.environ.get("EMAIL_USER")
-    ADMIN_PASS = os.environ.get("EMAIL_PASS")
-
-    for _, row in expiring_items.iterrows():
-        msg = EmailMessage()
-        msg.set_content(f"Alert: {row['Medicine Name']} expires on {row['Expiry']}. Move to front shelf!")
-        msg['Subject'] = f"⚠️ 15-Day Expiry Alert: {row['Medicine Name']}"
-        msg['From'] = ADMIN_EMAIL
-        msg['To'] = row['Customer Email']
-
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login(ADMIN_EMAIL, ADMIN_PASS)
-            smtp.send_message(msg)
-            print(f"Sent alert for {row['Medicine Name']} to {row['Customer Email']}")
-
-if _name_ == "_main_":
-    run_expiry_check()
     
